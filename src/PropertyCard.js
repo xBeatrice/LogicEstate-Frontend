@@ -48,11 +48,11 @@ const PropertyCard = ({ property }) => {
       <Grid
         item
         xs={12}
-        sm={4}
-        md={4}
-        lg={4}
+        sm={3}
+        md={3}
+        lg={3}
         onClick={handleOpenDialog}
-        sx={{ m: "auto", mt: "18px" }}
+        sx={{ m: "16px", mt: "18px" }}
       >
         <Card
           elevation={9}

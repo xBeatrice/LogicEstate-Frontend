@@ -1,18 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import {
-  Divider,
-  Container,
-  Grid,
-  Toolbar,
-  IconButton,
-  Typography,
-  Card,
-  CardMedia,
-  Paper,
-  Tabs,
-  Tab,
-} from "@mui/material";
+import { Divider, Toolbar, Typography, Tabs, Tab } from "@mui/material";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
 import AboutUs from "./AboutUs";
 import Properties from "./Properties";
@@ -50,7 +37,7 @@ export default function Header(props) {
         <Tab label="About us" sx={{ fontSize: "18px", mx: "10px" }} />
         <Tab label="Properties" sx={{ fontSize: "18px", mx: "10px" }} />
         <Tab label="Market Insight" sx={{ fontSize: "18px", mx: "10px" }} />
-        <Tab label="My account" sx={{ fontSize: "18px", mx: "10px" }} />
+        <Tab label="Add Property" sx={{ fontSize: "18px", mx: "10px" }} />
       </Tabs>
       {selectedTabIndex === 0 && <AboutUs />}
       {selectedTabIndex === 1 && <Properties />}

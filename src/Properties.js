@@ -6,11 +6,8 @@ import {
   Select,
   MenuItem,
   Checkbox,
-  FormControlLabel,
-  FormGroup,
   FormControl,
   FormLabel,
-  Autocomplete,
   ListItemText,
 } from "@mui/material";
 import MapDialog from "./MapDialog";
@@ -42,7 +39,7 @@ const Properties = () => {
         const formattedProperties = response.data.map((property) => ({
           id: property.Id,
           title: property.Title,
-          images: [property.Images],
+          images: property.Images.split(", "),
           description: property.Description,
           coordinates: { lat: property.Latitude, lng: property.Longitude },
           city: property.City,
@@ -116,14 +113,14 @@ const Properties = () => {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
-          width: "90%",
+          width: "100%",
         }}
       >
         {filteredProperties.map((property) => (
           <PropertyCard key={property.id} property={property} />
         ))}
       </div>
-      <div style={{ width: "10%" }}>
+      <div style={{ width: "260px", m: "auto" }}>
         <Button
           variant="contained"
           onClick={handleShowMapDialog}
