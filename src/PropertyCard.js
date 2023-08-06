@@ -1,26 +1,21 @@
 import React, { useState } from "react";
 import {
-  Box,
   Grid,
   Card,
   CardMedia,
   CardContent,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
-  IconButton,
   CardActionArea,
 } from "@mui/material";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import PropertyDialog from "./PropertyDialog";
+import DeleteDialog from "./DeleteDialog";
+import EditDialog from "./EditDialog";
+
 const PropertyCard = ({ property }) => {
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isNextButton, setNextButton] = useState(true);
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleOpenDialog = () => {
     setDialogOpen(true);
@@ -28,6 +23,39 @@ const PropertyCard = ({ property }) => {
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
+
+  const handlePropertyDelete = () => {
+    // Replace this with your actual delete logic.
+    // For example, you can call an API to delete the property from the server.
+    console.log("Property deleted!");
+    handleCloseDeleteDialog();
+  };
+
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+  const [editedProperty, setEditedProperty] = useState(property);
+
+  const handleOpenEditDialog = () => {
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+  };
+
+  const handleSaveChanges = () => {
+    // Call the API or perform any action to save the edited property
+    console.log("Edited Property:", editedProperty);
+    // Close the dialog
+    handleCloseEditDialog();
   };
 
   const handleImageNavigation = () => {
@@ -42,7 +70,6 @@ const PropertyCard = ({ property }) => {
     }
     setNextButton((prevIsNextButton) => !prevIsNextButton);
   };
-
   return (
     <>
       <Grid
@@ -82,104 +109,32 @@ const PropertyCard = ({ property }) => {
           </CardActionArea>
         </Card>
       </Grid>
-      <Dialog
-        open={isDialogOpen}
-        onClose={handleCloseDialog}
-        maxWidth="1800px"
-        overflow="hidden"
-      >
-        <DialogTitle variant="h4">{property.title}</DialogTitle>
-        <DialogContent sx={{ overflowX: "hidden" }}>
-          <DialogContentText>
-            <div style={{ position: "relative" }}>
-              <img
-                src={property.images[currentImageIndex]}
-                alt="property"
-                height="700px"
-                width="1100px"
-                margin="16px"
-              />
-              {/* Slideshow controls */}
-              <Box
-                position="absolute"
-                top="50%"
-                left="45%"
-                transform="translateY(50%)"
-                display="flex"
-                justifyContent="center"
-                width="100%"
-                overflow="hidden"
-                p={2}
-              >
-                {currentImageIndex !== property.images.length - 1 && (
-                  <IconButton
-                    onClick={handleImageNavigation}
-                    size="large"
-                    color="black"
-                    sx={{ width: "60px", height: "60px" }}
-                  >
-                    <ArrowForwardIosIcon
-                      sx={{ width: "50px", height: "50px" }}
-                    />
-                  </IconButton>
-                )}
-                {currentImageIndex === property.images.length - 1 && (
-                  <IconButton
-                    onClick={handleImageNavigation}
-                    size="large"
-                    color="black"
-                    sx={{ width: "60px", height: "60px" }}
-                  >
-                    <ArrowBackIosIcon sx={{ width: "50px", height: "50px" }} />
-                  </IconButton>
-                )}
-              </Box>
-            </div>
-            <Typography variant="h5">{property.description}</Typography>
-            <Typography variant="h6">
-              Year of construction: {property.constructionYear}
-            </Typography>
-            <Typography variant="h6">Floor: {property.floor}</Typography>
-            <Typography variant="h6">
-              No. of rooms: {property.numberOfRooms}
-            </Typography>
-            <Typography variant="h6">
-              Surface: {property.surfaceSquareMeters} square meters
-            </Typography>
-            <Typography variant="h6">City: {property.city}</Typography>
-            <Typography
-              color="primary"
-              variant="h5"
-              sx={{ textAlign: "right", mb: "10px" }}
-            >
-              {property.price} EUR
-            </Typography>
-          </DialogContentText>
-          {/* Google Maps map with the pin */}
-          <div style={{ width: "100%", height: "400px" }}>
-            {isDialogOpen && (
-              <iframe
-                title="Google Map"
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                style={{ border: 0 }}
-                src={`https://www.google.com/maps/embed/v1/place?q=${property.coordinates.lat},${property.coordinates.lng}&key=AIzaSyBCddRMfrTtM1GKebju3KEakf2AHfiw6sg`}
-                allowFullScreen
-              ></iframe>
-            )}
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleCloseDialog}
-            variant="contained"
-            color="primary"
-          >
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <PropertyDialog
+        isDialogOpen={isDialogOpen}
+        property={property}
+        handleCloseDialog={handleCloseDialog}
+        currentImageIndex={currentImageIndex}
+        handleImageNavigation={handleImageNavigation}
+        handleOpenDeleteDialog={handleOpenDeleteDialog}
+        handleCloseDeleteDialog={handleCloseDeleteDialog} // Pass the callback to the child component
+        handlePropertyDelete={handlePropertyDelete} // Pass the callback to the child component
+        handleOpenEditDialog={handleOpenEditDialog}
+        handleCloseEditDialog={handleCloseEditDialog}
+      />
+      <DeleteDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        onDelete={handlePropertyDelete}
+      />
+      <EditDialog
+        isOpen={isEditDialogOpen}
+        property={editedProperty}
+        onClose={handleCloseEditDialog}
+        onSaveChanges={handleSaveChanges}
+        onPropertyChange={setEditedProperty}
+        editedProperty={editedProperty}
+        setEditedProperty={setEditedProperty}
+      />
     </>
   );
 };
