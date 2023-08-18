@@ -16,7 +16,7 @@ import cityMock from "./cityMock";
 import axios from "axios";
 
 const EditDialog = (props) => {
-  const [mapsApiLoaded, setMapsApiLoaded] = useState(false);
+  const [isGoogleMapsLoaded, setIsGoogleMapsLoaded] = useState(false);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -26,30 +26,16 @@ const EditDialog = (props) => {
     }));
   };
 
-  const handleSaveClick = () => {
-    props.onSaveChanges();
-  };
-
-  const handleCloseClick = () => {
-    props.onClose();
-  };
   const mapRef = useRef(null);
   const markerRef = useRef(null);
-
-  useEffect(() => {
-    loadGoogleMapsAPI();
-  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Extract latitude and longitude from the coordinates object
     const { lat, lng } = props.editedProperty.coordinates;
 
-    // Convert the images array to a comma-separated string
     const imagesString = props.editedProperty.images.join(",");
 
-    // Prepare the updatedProperty object with the updated values
     const updatedProperty = {
       ...props.editedProperty,
       latitude: lat,
@@ -57,11 +43,13 @@ const EditDialog = (props) => {
       images: imagesString,
     };
 
+    // Remove the 'coordinates' property from the updatedProperty
+    const { coordinates, ...newProperty } = updatedProperty;
+
     try {
-      // Make the PUT request to the backend API to update the property
-      const response = await axios.put(
-        `https://localhost:44333/Homes/Edit/${updatedProperty.id}`,
-        updatedProperty,
+      const response = await axios.post(
+        `https://localhost:44333/Homes/Edit/${newProperty.id}`,
+        newProperty,
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
@@ -69,25 +57,17 @@ const EditDialog = (props) => {
         }
       );
 
-      // Handle the response as needed
       console.log("Property updated:", response.data);
 
-      // Call the onUpdate callback to inform the parent component of the update
-      props.onUpdate(props.editedProperty);
-
-      // Close the dialog
       props.onClose();
     } catch (error) {
-      // Handle errors if the request fails
       console.error("Error updating property:", error);
     }
   };
 
   const createMap = () => {
-    if (!mapRef.current) return;
-
     const newMap = new window.google.maps.Map(mapRef.current, {
-      center: { lat: 44.4266, lng: 26.1066 }, // Default center (Bucharest, Romania)
+      center: props.editedProperty.coordinates, // Default center (Bucharest, Romania)
       zoom: 13,
     });
 
@@ -98,8 +78,9 @@ const EditDialog = (props) => {
         coordinates: { lat: latLng.lat(), lng: latLng.lng() },
       }));
       if (markerRef.current) {
-        markerRef.current.setMap(null);
+        markerRef.current.setMap(null); // Remove the previous marker from the map
       }
+      // Drop a new marker at the clicked location
       const newMarker = new window.google.maps.Marker({
         position: latLng,
         map: newMap,
@@ -108,19 +89,47 @@ const EditDialog = (props) => {
       markerRef.current = newMarker;
     });
   };
-  const loadGoogleMapsAPI = () => {
-    if (mapsApiLoaded) return; // Check if the API is already loaded
 
+  const loadGoogleMapsAPI = () => {
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBCddRMfrTtM1GKebju3KEakf2AHfiw6sg&libraries=places&callback=createMap`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBCddRMfrTtM1GKebju3KEakf2AHfiw6sg&libraries=places`;
     script.async = true;
     script.defer = true;
+    script.onload = () => {
+      setIsGoogleMapsLoaded(true);
+      createMap(); // Call createMap after the API has loaded
+    };
     document.head.appendChild(script);
-    setMapsApiLoaded(true); // Set the flag to true once the API is loaded
   };
 
+  const handleDialogOpen = () => {
+    if (!isGoogleMapsLoaded) {
+      loadGoogleMapsAPI();
+    } else {
+      createMap();
+    }
+  };
+
+  useEffect(() => {
+    if (mapRef.current) {
+      loadGoogleMapsAPI();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (mapRef.current && props.isOpen) {
+      handleDialogOpen();
+    }
+  }, [props.isOpen]);
+
   return (
-    <Dialog open={props.isOpen} onClose={props.onClose} maxWidth="sm" fullWidth>
+    <Dialog
+      open={props.isOpen}
+      onClose={props.onClose}
+      onEntered={handleDialogOpen}
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle>Edit Property</DialogTitle>
       <DialogContent>
         <Container>
@@ -226,9 +235,6 @@ const EditDialog = (props) => {
                   value={props.editedProperty.images.join("\n")} // Convert the array of image URLs to a string
                   onChange={handleInputChange}
                 />
-              </Grid>
-              <Grid item xs={12}>
-                <div style={{ width: "100%", height: "400px" }} ref={mapRef} />
               </Grid>
               <Grid item xs={12}>
                 <div style={{ width: "100%", height: "400px" }} ref={mapRef} />

@@ -16,6 +16,8 @@ const PropertyCard = ({ property }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isNextButton, setNextButton] = useState(true);
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+  const [editedProperty, setEditedProperty] = useState(property);
 
   const handleOpenDialog = () => {
     setDialogOpen(true);
@@ -32,16 +34,6 @@ const PropertyCard = ({ property }) => {
   const handleCloseDeleteDialog = () => {
     setDeleteDialogOpen(false);
   };
-
-  const handlePropertyDelete = () => {
-    // Replace this with your actual delete logic.
-    // For example, you can call an API to delete the property from the server.
-    console.log("Property deleted!");
-    handleCloseDeleteDialog();
-  };
-
-  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
-  const [editedProperty, setEditedProperty] = useState(property);
 
   const handleOpenEditDialog = () => {
     setEditDialogOpen(true);
@@ -117,14 +109,15 @@ const PropertyCard = ({ property }) => {
         handleImageNavigation={handleImageNavigation}
         handleOpenDeleteDialog={handleOpenDeleteDialog}
         handleCloseDeleteDialog={handleCloseDeleteDialog} // Pass the callback to the child component
-        handlePropertyDelete={handlePropertyDelete} // Pass the callback to the child component
+        // handlePropertyDelete={handlePropertyDelete} // Pass the callback to the child component
         handleOpenEditDialog={handleOpenEditDialog}
         handleCloseEditDialog={handleCloseEditDialog}
       />
       <DeleteDialog
         isOpen={isDeleteDialogOpen}
         onClose={handleCloseDeleteDialog}
-        onDelete={handlePropertyDelete}
+        property={property}
+        // onDelete={handlePropertyDelete}
       />
       <EditDialog
         isOpen={isEditDialogOpen}

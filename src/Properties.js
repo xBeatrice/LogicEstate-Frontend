@@ -39,7 +39,7 @@ const Properties = () => {
         const formattedProperties = response.data.map((property) => ({
           id: property.Id,
           title: property.Title,
-          images: property.Images.split(", "),
+          images: property.Images.split(","),
           description: property.Description,
           coordinates: { lat: property.Latitude, lng: property.Longitude },
           city: property.City,

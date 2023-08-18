@@ -1,18 +1,8 @@
 import React from "react";
 import { Divider, Toolbar, Typography, Tabs, Tab } from "@mui/material";
 import MapsHomeWorkIcon from "@mui/icons-material/MapsHomeWork";
-import AboutUs from "./AboutUs";
-import Properties from "./Properties";
-import MarketInsight from "./MarketInsight";
-import PropertyForm from "./PropetyForm";
 
 export default function Header(props) {
-  const [selectedTabIndex, setSelectedTabIndex] = React.useState(0);
-
-  const handleTabChange = (event, newIndex) => {
-    setSelectedTabIndex(newIndex);
-  };
-
   return (
     <div>
       <Toolbar sx={{ alignItems: "center", mb: "6px" }}>
@@ -28,8 +18,8 @@ export default function Header(props) {
       </Toolbar>
       <Divider sx={{ backgroundColor: "#1976d2" }} />
       <Tabs
-        value={selectedTabIndex}
-        onChange={handleTabChange}
+        value={props.selectedTabIndex}
+        onChange={props.handleTabChange}
         textColor="secondary"
         centered
         sx={{ mt: "10px" }}
@@ -39,10 +29,6 @@ export default function Header(props) {
         <Tab label="Market Insight" sx={{ fontSize: "18px", mx: "10px" }} />
         <Tab label="Add Property" sx={{ fontSize: "18px", mx: "10px" }} />
       </Tabs>
-      {selectedTabIndex === 0 && <AboutUs />}
-      {selectedTabIndex === 1 && <Properties />}
-      {selectedTabIndex === 2 && <MarketInsight />}
-      {selectedTabIndex === 3 && <PropertyForm />}
     </div>
   );
 }

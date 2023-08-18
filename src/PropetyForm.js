@@ -57,13 +57,10 @@ export default function PropertyForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Extract latitude and longitude from the coordinates object
     const { lat, lng } = property.coordinates;
 
-    // Convert the images array to a comma-separated string
     const imagesString = property.images.join(",");
 
-    // Prepare the newProperty object with the updated values
     const newProperty = {
       ...property,
       latitude: lat,
@@ -72,7 +69,6 @@ export default function PropertyForm() {
     };
 
     try {
-      // Make the POST request to the backend API
       const response = await axios.post(
         "https://localhost:44333/Homes/Create",
         newProperty,
@@ -83,10 +79,7 @@ export default function PropertyForm() {
         }
       );
 
-      // Handle the response as needed
       console.log("New property created:", response.data);
-
-      // Reset the form fields or perform any other actions as necessary
       setProperty({
         title: "",
         images: [],
@@ -103,7 +96,6 @@ export default function PropertyForm() {
         markerRef.current.setMap(null); // Remove the previous marker from the map
       }
     } catch (error) {
-      // Handle errors if the request fails
       console.error("Error creating property:", error);
     }
   };
