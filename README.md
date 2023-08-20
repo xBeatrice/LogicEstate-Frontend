@@ -1,4 +1,4 @@
-# 🏡  LogicEstate - Real Estate Platform
+# 🏡  LogicEstate - Frontend
 
 Welcome to LogicEstate, a comprehensive real estate platform built with React and Material-UI for the frontend. This application provides users with the ability to explore and filter properties, view statistics through interactive charts, and utilize Google Maps integration to visualize property locations.
 
