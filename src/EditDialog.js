@@ -102,34 +102,31 @@ const EditDialog = (props) => {
     document.head.appendChild(script);
   };
 
-  const handleDialogOpen = () => {
-    if (!isGoogleMapsLoaded) {
-      loadGoogleMapsAPI();
-    } else {
-      createMap();
-    }
-  };
+  // const handleDialogOpen = () => {
+  //   if (!isGoogleMapsLoaded) {
+  //     loadGoogleMapsAPI();
+  //   } else {
+  //     createMap();
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (mapRef.current) {
+  //     loadGoogleMapsAPI();
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   if (mapRef.current && props.isOpen) {
+  //     handleDialogOpen();
+  //   }
+  // }, [props.isOpen]);
 
   useEffect(() => {
-    if (mapRef.current) {
-      loadGoogleMapsAPI();
-    }
+    loadGoogleMapsAPI();
   }, []);
-
-  useEffect(() => {
-    if (mapRef.current && props.isOpen) {
-      handleDialogOpen();
-    }
-  }, [props.isOpen]);
-
   return (
-    <Dialog
-      open={props.isOpen}
-      onClose={props.onClose}
-      onEntered={handleDialogOpen}
-      maxWidth="sm"
-      fullWidth
-    >
+    <Dialog open={props.isOpen} onClose={props.onClose} maxWidth="sm" fullWidth>
       <DialogTitle>Edit Property</DialogTitle>
       <DialogContent>
         <Container>

@@ -19,10 +19,8 @@ const DeletePropertyDialog = ({ isOpen, onClose, onDelete, property }) => {
         });
 
       console.log("Property deleted:", response.data);
-      // Handle success
-
-      // Close the delete dialog
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error deleting property:", error);
       console.error("Error status:", error.response?.status);
